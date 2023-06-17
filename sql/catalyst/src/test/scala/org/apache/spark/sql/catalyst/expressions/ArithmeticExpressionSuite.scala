@@ -52,10 +52,13 @@ class ArithmeticExpressionSuite extends SparkFunSuite with ExpressionEvalHelper 
   }
 
   test("+ (Add)") {
+    // testing different number types
+    //   Byte, Short, Int, Long, Float, Double, org.apache.spark.sql.types.Decimal
     testNumericDataTypes { convert =>
       val left = Literal(convert(1))
       val right = Literal(convert(2))
-      checkEvaluation(Add(left, right), convert(3))
+      val expected = convert(3)
+      checkEvaluation(Add(left, right), expected)
       checkEvaluation(Add(Literal.create(null, left.dataType), right), null)
       checkEvaluation(Add(left, Literal.create(null, right.dataType)), null)
     }
