@@ -52,6 +52,49 @@ class SparkSqlParserSuite extends AnalysisTest with SharedSparkSession {
     intercept[ParseException](sql(sqlText).collect())
   }
 
+  // https://www.waitingforcode.com/apache-spark-sql/\
+  //   writing-custom-optimization-apache-spark-sql-parser/read
+  test("convert SELECT into a LogicalPlan") {
+    val parsedPlan = parser.parsePlan("SELECT * FROM numbers where nr > 1")
+    val planStr = parsedPlan.toString
+    // 'Project [*]
+    // +- 'Filter ('nr > 1)
+    //   +- 'UnresolvedRelation [numbers], [], false
+    assert(planStr != null)
+  }
+
+  test("convert filter into an Expression") {
+    val parsedExpr = parser.parseExpression("n > 1")
+    val exprStr = parsedExpr.toString
+    assert(exprStr != null)
+    parsedExpr match {
+      case gt: GreaterThan =>
+        assert(gt.left.isInstanceOf[UnresolvedAttribute])
+        assert(gt.right.isInstanceOf[Literal])
+      case _ => fail()
+    }
+  }
+
+  test("convert data type into a schema") {
+    val parsedSchema = parser.parseTableSchema("n INTEGER, a STRING")
+    val schemaStr = parsedSchema.toString()
+    // 'StructType(StructField(n,IntegerType,true),StructField(a,StringType,true))'
+    assert(schemaStr != null)
+  }
+
+  test("convert STRING type into StringType") {
+    var parsedType = parser.parseDataType("STRING")
+    var typeStr = parsedType.toString()
+    // 'StringType'
+    assert(typeStr != null)
+
+//    parsedType = parser.parseDataType("STRUCT(INTEGER n)")
+//    typeStr = parsedType.toString()
+//    // 'StringType'
+//    assert(typeStr != null)
+  }
+
+
   test("Checks if SET/RESET can parse all the configurations") {
     // Force to build static SQL configurations
     StaticSQLConf
