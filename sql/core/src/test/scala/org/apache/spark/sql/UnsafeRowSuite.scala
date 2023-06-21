@@ -59,7 +59,7 @@ class UnsafeRowSuite extends SparkFunSuite {
 
   test("bitset width calculation") {
     assert(UnsafeRow.calculateBitSetWidthInBytes(0) === 0)
-    assert(UnsafeRow.calculateBitSetWidthInBytes(1) === 8)
+    assert(UnsafeRow.calculateBitSetWidthInBytes(1) === 8) // 8 bytes aligned
     assert(UnsafeRow.calculateBitSetWidthInBytes(32) === 8)
     assert(UnsafeRow.calculateBitSetWidthInBytes(64) === 8)
     assert(UnsafeRow.calculateBitSetWidthInBytes(65) === 16)

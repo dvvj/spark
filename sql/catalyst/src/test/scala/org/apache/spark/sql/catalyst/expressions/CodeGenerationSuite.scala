@@ -252,6 +252,10 @@ class CodeGenerationSuite extends SparkFunSuite with ExpressionEvalHelper {
     assert(unsafeRow.toString != null)
     assert(unsafeRow.getUTF8String(0) == UTF8String.fromString("a"))
     assert(unsafeRow.getInt(1) == 13)
+
+    val fromUnsafe = SafeProjection.create(schema)
+    val internalRow2 = fromUnsafe(unsafeRow)
+    assert(internalRow === internalRow2)
   }
 
 
