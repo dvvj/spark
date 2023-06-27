@@ -49,6 +49,13 @@ class CodegenExpressionCachingSuite extends SparkFunSuite {
     assert(instance.eval(null) === false)
   }
 
+  test("GeneratePredicate with Literals") {
+    val expr = And(Literal(true), Literal(false))
+    val instance = GeneratePredicate.generate(expr)
+    instance.initialize(0)
+    assert(instance.eval(null) === false)
+  }
+
   test("GenerateUnsafeProjection should not share expression instances") {
     val expr1 = MutableExpression()
     val instance1 = UnsafeProjection.create(Seq(expr1))

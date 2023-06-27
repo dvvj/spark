@@ -337,6 +337,8 @@ public final class UnsafeRow extends InternalRow implements Externalizable, Kryo
   @Override
   public int getInt(int ordinal) {
     assertIndexIsValid(ordinal);
+    // baseOffset = 16
+    // offset: 16
     return Platform.getInt(baseObject, getFieldOffset(ordinal));
   }
 
@@ -379,6 +381,8 @@ public final class UnsafeRow extends InternalRow implements Externalizable, Kryo
     final long offsetAndSize = getLong(ordinal);
     final int offset = (int) (offsetAndSize >> 32);
     final int size = (int) offsetAndSize;
+    // baseOffset: jvm object base offset
+    // offset: index within baseObject byte array
     return UTF8String.fromAddress(baseObject, baseOffset + offset, size);
   }
 
