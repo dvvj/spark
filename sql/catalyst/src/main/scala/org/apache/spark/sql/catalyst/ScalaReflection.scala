@@ -936,7 +936,7 @@ object ScalaReflection extends ScalaReflection {
           path.recordValueForMap(getClassNameFromType(valueType)))
         MapEncoder(ClassTag(getClassFromType(t)), keyEncoder, valueEncoder, valueEncoder.nullable)
 
-      case t if definedByConstructorParams(t) =>
+      case t if definedByConstructorParams(t) => // Product but not Option
         if (seenTypeSet.contains(t)) {
           throw QueryExecutionErrors.cannotHaveCircularReferencesInClassError(t.toString)
         }
