@@ -669,7 +669,8 @@ class ExpressionEncoderSuite extends CodegenInterpretedPlanTest with AnalysisTes
       // Make sure encoder is serializable.
       ClosureCleaner.clean((s: String) => encoder.getClass.getName)
 
-      val row = encoder.createSerializer().apply(input)
+      val ser = encoder.createSerializer()
+      val row = ser.apply(input)
       val schema = encoder.schema.toAttributes
       val boundEncoder = encoder.resolveAndBind()
       val convertedBack = try boundEncoder.createDeserializer().apply(row) catch {

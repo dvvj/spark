@@ -2681,6 +2681,14 @@ class DataFrameSuite extends QueryTest
     checkResult()
   }
 
+  test("LocalRelation test1") {
+    val df1 = Seq(
+      ("a", 1),
+      ("ds", 12)
+    ).toDF("name", "v")
+    assert(df1.count() == 2)
+  }
+
   test("Uuid expressions should produce same results at retries in the same DataFrame") {
     val df = spark.range(1).select($"id", new Column(Uuid()))
     checkAnswer(df, df.collect())
